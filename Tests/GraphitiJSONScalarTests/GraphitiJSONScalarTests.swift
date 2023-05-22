@@ -189,8 +189,7 @@ class GraphitiJSONScalarTests: XCTestCase {
         ).wait()
         
         let value = try XCTUnwrap(result.data?["value"])
-        // Compare by description because ordering doesn't matter, but will cause us to fail
-        XCTAssertEqual(value.description, fixture.description)
+        try XCTAssertEqualIgnoringOrder(value, fixture)
         XCTAssertEqual(result.errors, [])
     }
     
@@ -225,8 +224,7 @@ class GraphitiJSONScalarTests: XCTestCase {
         ).wait()
         
         let value = try XCTUnwrap(result.data?["value"])
-        // Compare by description because ordering doesn't matter, but will cause us to fail
-        XCTAssertEqual(value.description, fixture.description)
+        try XCTAssertEqualIgnoringOrder(value, fixture)
         XCTAssertEqual(result.errors, [])
     }
     
@@ -307,3 +305,36 @@ let fixture = Map.dictionary([
     ],
     "array": ["string", 3, 3.14, true, false, nil],
 ])
+
+// Checks for equality while ignoring order. We compare Maps this way because pure JSON doesn't care about order
+func XCTAssertEqualIgnoringOrder(_ lhs: Map, _ rhs: Map, file: StaticString = #filePath, line: UInt = #line) throws {
+    switch (lhs, rhs) {
+    case (.undefined, .undefined):
+        return
+    case (.null, .null):
+        return
+    case let (.bool(l), .bool(r)):
+        XCTAssertEqual(l, r)
+    case let (.number(l), .number(r)):
+        XCTAssertEqual(l, r)
+    case let (.string(l), .string(r)):
+        XCTAssertEqual(l, r)
+    case let (.array(l), .array(r)):
+        XCTAssertEqual(l, r)
+    case let (.dictionary(l), .dictionary(r)):
+        var lUnordered = [String: Map]()
+        l.forEach { lUnordered[$0.0] = $0.1 }
+        var rUnordered = [String: Map]()
+        r.forEach { rUnordered[$0.0] = $0.1 }
+        
+        XCTAssertEqual(lUnordered.keys, rUnordered.keys)
+        
+        for key in lUnordered.keys {
+            let lhsValue = try XCTUnwrap(lUnordered[key])
+            let rhsValue = try XCTUnwrap(rUnordered[key])
+            try XCTAssertEqualIgnoringOrder(lhsValue, rhsValue)
+        }
+    default:
+        XCTFail()
+    }
+}
