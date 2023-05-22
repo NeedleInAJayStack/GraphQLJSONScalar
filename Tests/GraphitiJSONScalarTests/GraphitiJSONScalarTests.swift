@@ -13,8 +13,11 @@ struct TestResolver {
     func boolLiteral(context: NoContext, arguments _: NoArguments) -> Map {
         return true
     }
-    func numberLiteral(context: NoContext, arguments _: NoArguments) -> Map {
+    func intLiteral(context: NoContext, arguments _: NoArguments) -> Map {
         return 42
+    }
+    func floatLiteral(context: NoContext, arguments _: NoArguments) -> Map {
+        return 42.2
     }
     func stringLiteral(context: NoContext, arguments _: NoArguments) -> Map {
         return "Fourty-two"
@@ -66,7 +69,8 @@ struct TestAPI: API {
         Query {
             Field("nullLiteral", at: TestResolver.nullLiteral)
             Field("boolLiteral", at: TestResolver.boolLiteral)
-            Field("numberLiteral", at: TestResolver.numberLiteral)
+            Field("intLiteral", at: TestResolver.intLiteral)
+            Field("floatLiteral", at: TestResolver.floatLiteral)
             Field("stringLiteral", at: TestResolver.stringLiteral)
             Field("array", at: TestResolver.array)
             Field("dictionary", at: TestResolver.dictionary)
@@ -107,14 +111,25 @@ class GraphitiJSONScalarTests: XCTestCase {
         )
     }
     
-    func testNumberLiteral() throws {
+    func testIntLiteral() throws {
         XCTAssertEqual(
             try api.execute(
-                request: "{ numberLiteral }",
+                request: "{ intLiteral }",
                 context: api.context,
                 on: group
             ).wait(),
-            .init(data: ["numberLiteral": 42])
+            .init(data: ["intLiteral": 42])
+        )
+    }
+    
+    func testFloatLiteral() throws {
+        XCTAssertEqual(
+            try api.execute(
+                request: "{ floatLiteral }",
+                context: api.context,
+                on: group
+            ).wait(),
+            .init(data: ["floatLiteral": 42.2])
         )
     }
     
