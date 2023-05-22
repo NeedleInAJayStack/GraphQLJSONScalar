@@ -9,7 +9,8 @@ let package = Package(
         .library(name: "GraphitiJSONScalar", targets: ["GraphitiJSONScalar"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "2.0.0"),
+        .package(url: "https://github.com/NeedleInAJayStack/GraphQL.git", branch: "fix/map-coding-shortcircuit"),
+//        .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "2.0.0"),
         // TODO: Mainline after merged: https://github.com/GraphQLSwift/Graphiti/pull/118
         .package(url: "https://github.com/NeedleInAJayStack/Graphiti.git", branch: "feature/scalar-extensions"),
 //        .package(url: "https://github.com/GraphQLSwift/Graphiti.git", from: "1.0.0"),

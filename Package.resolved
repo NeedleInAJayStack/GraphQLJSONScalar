@@ -12,10 +12,10 @@
     {
       "identity" : "graphql",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/GraphQLSwift/GraphQL.git",
+      "location" : "https://github.com/NeedleInAJayStack/GraphQL.git",
       "state" : {
-        "revision" : "1b9d48ce0f0ad8280f75ce9914579aaac5881bc6",
-        "version" : "2.5.1"
+        "branch" : "fix/map-coding-shortcircuit",
+        "revision" : "19c4cc0b8220fe21b6a3e641ea81602f2f07418f"
       }
     },
     {
