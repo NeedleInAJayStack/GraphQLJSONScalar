@@ -3,10 +3,10 @@
     {
       "identity" : "graphiti",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/NeedleInAJayStack/Graphiti.git",
+      "location" : "https://github.com/GraphQLSwift/Graphiti.git",
       "state" : {
-        "branch" : "feature/scalar-extensions",
-        "revision" : "a6708b73ce4a44c9d2e32e6b294081b1d3a3f2e3"
+        "revision" : "daa556a21b4efae97867eac3f5e4c730f181332a",
+        "version" : "1.11.0"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-nio.git",
       "state" : {
-        "revision" : "2d8e6ca36fe3e8ed74b0883f593757a45463c34d",
-        "version" : "2.53.0"
+        "revision" : "a2e487b77f17edbce9a65f2b7415f2f479dc8e48",
+        "version" : "2.57.0"
       }
     }
   ],
