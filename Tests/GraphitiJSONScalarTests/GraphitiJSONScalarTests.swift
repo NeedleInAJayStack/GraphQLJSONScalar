@@ -190,7 +190,7 @@ class GraphitiJSONScalarTests: XCTestCase {
         
         let value = try XCTUnwrap(result.data?["value"])
         try XCTAssertEqualIgnoringOrder(value, fixture)
-        XCTAssertEqual(result.errors, [])
+        XCTAssertEqual(result.errors, [GraphQLError]())
     }
     
     /// should support parsing literals
