@@ -65,7 +65,7 @@ final class JSONObjectTests: XCTestCase {
         let result = try graphql(
             schema: schema,
             request: """
-            query($arg: JSON!) {
+            query($arg: JSONObject!) {
                 value(arg: $arg)
             }
             """,
