@@ -1,7 +1,7 @@
 import GraphQL
 import GraphQLJSONScalar
-import OrderedCollections
 import NIO
+import OrderedCollections
 import XCTest
 
 func createSchema(type: GraphQLScalarType) throws -> GraphQLSchema {
@@ -12,11 +12,11 @@ func createSchema(type: GraphQLScalarType) throws -> GraphQLSchema {
                 "value": GraphQLField(
                     type: type,
                     args: [
-                        "arg": GraphQLArgument(type: type)
+                        "arg": GraphQLArgument(type: type),
                     ],
                     resolve: { _, args, _, _ in
                         switch args {
-                        case .dictionary(let args):
+                        case let .dictionary(args):
                             return args["arg"]
                         default:
                             throw GraphQLError(message: "Expected object")
@@ -26,15 +26,15 @@ func createSchema(type: GraphQLScalarType) throws -> GraphQLSchema {
                 "rootValue": GraphQLField(
                     type: type,
                     resolve: { obj, _, _, _ in
-                        return obj
+                        obj
                     }
                 ),
             ]
         ),
-        
+
         types: [
             GraphQLJSONScalar,
-            GraphQLJSONObjectScalar
+            GraphQLJSONObjectScalar,
         ]
     )
 }

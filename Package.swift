@@ -15,15 +15,19 @@ let package = Package(
     targets: [
         .target(
             name: "GraphQLJSONScalar",
-            dependencies: ["GraphQL"]),
+            dependencies: ["GraphQL"]
+        ),
         .target(
             name: "GraphitiJSONScalar",
-            dependencies: ["GraphQLJSONScalar", "Graphiti"]),
+            dependencies: ["GraphQLJSONScalar", "Graphiti"]
+        ),
         .testTarget(
             name: "GraphQLJSONScalarTests",
-            dependencies: ["GraphQLJSONScalar"]),
+            dependencies: ["GraphQLJSONScalar"]
+        ),
         .testTarget(
             name: "GraphitiJSONScalarTests",
-            dependencies: ["GraphitiJSONScalar"]),
+            dependencies: ["GraphitiJSONScalar"]
+        ),
     ]
 )

@@ -1,7 +1,7 @@
 import Foundation
+import Graphiti
 import GraphQL
 import GraphQLJSONScalar
-import Graphiti
 import OrderedCollections
 
 public extension Scalar where ScalarType == Map {
@@ -10,17 +10,17 @@ public extension Scalar where ScalarType == Map {
             Map.self,
             as: "JSON",
             serialize: { value, _ in
-                return try map(from: value)
+                try map(from: value)
             },
             parseValue: { map, _ in
-                return map
+                map
             },
             parseLiteral: { ast, _ in
                 try parseLiteral(typeName: "JSON", ast: ast)
             }
         ).description("The `JSONObject` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).")
     }
-    
+
     static func jsonObject() -> Scalar<Resolver, Context, Map> {
         return Scalar(
             Map.self,
