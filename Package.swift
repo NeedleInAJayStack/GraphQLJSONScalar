@@ -9,8 +9,8 @@ let package = Package(
         .library(name: "GraphitiJSONScalar", targets: ["GraphitiJSONScalar"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/GraphQLSwift/GraphQL.git", from: "2.0.0"),
-        .package(url: "https://github.com/GraphQLSwift/Graphiti.git", from: "1.11.0"),
+        .package(url: "https://github.com/GraphQLSwift/GraphQL.git", "2.0.0" ..< "4.0.0"),
+        .package(url: "https://github.com/GraphQLSwift/Graphiti.git", "1.11.0" ..< "3.0.0"),
     ],
     targets: [
         .target(
