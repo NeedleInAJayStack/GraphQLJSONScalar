@@ -1,6 +1,7 @@
 import GraphQL
 import OrderedCollections
 
+/// `GraphQLJSONScalar` represents any JSON-serializable value, including scalars, arrays, and objects.
 public let GraphQLJSONScalar = try! GraphQLScalarType(
     name: "JSON",
     description: "The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).",
@@ -15,6 +16,7 @@ public let GraphQLJSONScalar = try! GraphQLScalarType(
     }
 )
 
+/// `GraphQLJSONObjectScalar` represents JSON objects.
 public let GraphQLJSONObjectScalar = try! GraphQLScalarType(
     name: "JSONObject",
     description: "The `JSONObject` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).",

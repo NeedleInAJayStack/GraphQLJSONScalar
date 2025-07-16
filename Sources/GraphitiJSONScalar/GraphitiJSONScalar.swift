@@ -5,6 +5,7 @@ import GraphQLJSONScalar
 import OrderedCollections
 
 public extension Scalar where ScalarType == Map {
+    /// Returns a scalar that represents any JSON-serializable value, including scalars, arrays, and objects.
     static func json() -> Scalar<Resolver, Context, Map> {
         return Scalar(
             Map.self,
@@ -21,6 +22,7 @@ public extension Scalar where ScalarType == Map {
         ).description("The `JSONObject` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).")
     }
 
+    /// Returns a represents JSON objects.
     static func jsonObject() -> Scalar<Resolver, Context, Map> {
         return Scalar(
             Map.self,

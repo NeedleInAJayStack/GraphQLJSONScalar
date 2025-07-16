@@ -1,7 +1,7 @@
 # GraphQLJSONScalar
 
 This package provides `JSON` and `JSONObject` scalar types to GraphQL and Graphiti schemas.
-This can be useful if you'd like your GraphQL to accept or emit untyped JSON. 
+This can be useful if you'd like your GraphQL to accept or emit untyped JSON.
 
 It is primarily a Swift port of this package: https://github.com/taion/graphql-type-json
 
@@ -11,7 +11,7 @@ To use the package, you should add it as a dependency in your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/NeedleInAJayStack/GraphQLJSONScalar.git", from: "0.0.1"),
+    .package(url: "https://github.com/NeedleInAJayStack/GraphQLJSONScalar.git", from: ...),
 ]
 ```
 
@@ -26,6 +26,9 @@ let schema = try Schema<TestResolver, NoContext> {
     ...
 }
 ```
+
+`json` can represent any JSON-serializable value, including scalars, arrays, and objects.
+`jsonObject` represents JSON objects specifically (i.e. not scalars or arrays).
 
 Unfortunately at this time you may include *either* `json` or `jsonObject`, but cannot include both.
 
