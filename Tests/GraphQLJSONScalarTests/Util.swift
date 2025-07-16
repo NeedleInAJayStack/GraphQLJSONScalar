@@ -1,7 +1,6 @@
 import GraphQL
 import GraphQLJSONScalar
 import OrderedCollections
-import XCTest
 
 func createSchema(type: GraphQLScalarType) throws -> GraphQLSchema {
     return try GraphQLSchema(

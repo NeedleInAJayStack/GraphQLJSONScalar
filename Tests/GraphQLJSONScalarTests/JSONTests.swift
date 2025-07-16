@@ -1,12 +1,12 @@
 import GraphQL
 import GraphQLJSONScalar
 import OrderedCollections
-import XCTest
+import Testing
 
-final class JSONTests: XCTestCase {
+@Suite class JSONTests {
     var schema: GraphQLSchema!
 
-    override func setUp() async throws {
+    init() async throws {
         schema = try createSchema(type: GraphQLJSONScalar)
     }
 
@@ -18,11 +18,8 @@ final class JSONTests: XCTestCase {
             rootValue: fixture
         )
 
-        XCTAssertEqual(
-            result.data?["rootValue"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["rootValue"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should support parsing values
@@ -37,11 +34,8 @@ final class JSONTests: XCTestCase {
             variableValues: ["arg": fixture]
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should support parsing literals
@@ -73,11 +67,8 @@ final class JSONTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should handle null literal
@@ -91,11 +82,8 @@ final class JSONTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            .null
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == .null)
+        #expect(result.errors == [])
     }
 
     /// should handle list literal
@@ -109,11 +97,8 @@ final class JSONTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            []
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == [])
+        #expect(result.errors == [])
     }
 
     /// should reject invalid literal
@@ -127,11 +112,7 @@ final class JSONTests: XCTestCase {
             """
         )
 
-        XCTAssertEqual(result.data, nil)
-
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data == nil)
+        #expect(result.errors.count == 1)
     }
 }

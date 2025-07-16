@@ -3,7 +3,7 @@ import Graphiti
 import GraphitiJSONScalar
 import GraphQL
 import OrderedCollections
-import XCTest
+import Testing
 
 struct TestResolver {
     func nullLiteral(context _: NoContext, arguments _: NoArguments) throws -> Map {
@@ -82,96 +82,100 @@ struct TestAPI: API {
     }
 }
 
-class GraphitiJSONScalarTests: XCTestCase {
+@Suite class GraphitiJSONScalarTests {
     private let api = TestAPI()
 
     func testNullLiteral() async throws {
-        let result = try await api.execute(
-            request: "{ nullLiteral }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: ["nullLiteral": .null])
+        #expect(
+            try await api.execute(
+                request: "{ nullLiteral }",
+                context: NoContext()
+            ) == .init(
+                data: ["nullLiteral": .null]
+            )
         )
     }
 
     func testBoolLiteral() async throws {
-        let result = try await api.execute(
-            request: "{ boolLiteral }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: ["boolLiteral": true])
+        #expect(
+            try await api.execute(
+                request: "{ boolLiteral }",
+                context: NoContext()
+            ) == .init(data: ["boolLiteral": true])
         )
     }
 
     func testNumberLiteral() async throws {
-        let result = try await api.execute(
-            request: "{ numberLiteral }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: ["numberLiteral": 42])
+        #expect(
+            try await api.execute(
+                request: "{ numberLiteral }",
+                context: NoContext()
+            ) == .init(
+                data: ["numberLiteral": 42]
+            )
         )
     }
 
     func testStringLiteral() async throws {
-        let result = try await api.execute(
-            request: "{ stringLiteral }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: ["stringLiteral": "Fourty-two"])
+        #expect(
+            try await api.execute(
+                request: "{ stringLiteral }",
+                context: NoContext()
+            ) == .init(
+                data: ["stringLiteral": "Fourty-two"]
+            )
         )
     }
 
     func testArray() async throws {
-        let result = try await api.execute(
-            request: "{ array }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: ["array": [
-                ["number": 42, "null": .null],
-                ["string": "Fourty-two", "null": .null],
-            ]])
+        #expect(
+            try await api.execute(
+                request: "{ array }",
+                context: NoContext()
+            ) == .init(
+                data: ["array": [
+                    ["number": 42, "null": .null],
+                    ["string": "Fourty-two", "null": .null],
+                ]]
+            )
         )
     }
 
     func testDictionary() async throws {
-        let result = try await api.execute(
-            request: "{ dictionary }",
-            context: NoContext()
-        )
-        XCTAssertEqual(
-            result,
-            .init(data: [
-                "dictionary": [
-                    "null": .null,
-                    "bool": true,
-                    "number": 42,
-                    "string": "Fourty-two",
+        #expect(
+            try await api.execute(
+                request: "{ dictionary }",
+                context: NoContext()
+            ) == .init(
+                data: [
                     "dictionary": [
                         "null": .null,
                         "bool": true,
                         "number": 42,
                         "string": "Fourty-two",
-                    ],
-                    "array": [
-                        [
+                        "dictionary": [
                             "null": .null,
                             "bool": true,
                             "number": 42,
                             "string": "Fourty-two",
+                            "dictionary": [
+                                "null": .null,
+                                "bool": true,
+                                "number": 42,
+                                "string": "Fourty-two",
+                            ],
+                            "array": [
+                                [
+                                    "null": .null,
+                                    "bool": true,
+                                    "number": 42,
+                                    "string": "Fourty-two",
+                                ],
+                            ],
                         ],
-                    ],
-                ],
-            ])
+                    ]
+                ]
+            )
         )
     }
 
@@ -187,9 +191,9 @@ class GraphitiJSONScalarTests: XCTestCase {
             variables: ["arg": fixture]
         )
 
-        let value = try XCTUnwrap(result.data?["value"])
-        try XCTAssertEqualIgnoringOrder(value, fixture)
-        XCTAssertEqual(result.errors, [GraphQLError]())
+        let value = try #require(result.data?["value"])
+        try ExpectEqualIgnoringOrder(value, fixture)
+        #expect(result.errors == [GraphQLError]())
     }
 
     /// should support parsing literals
@@ -221,9 +225,9 @@ class GraphitiJSONScalarTests: XCTestCase {
             context: NoContext()
         )
 
-        let value = try XCTUnwrap(result.data?["value"])
-        try XCTAssertEqualIgnoringOrder(value, fixture)
-        XCTAssertEqual(result.errors, [])
+        let value = try #require(result.data?["value"])
+        try ExpectEqualIgnoringOrder(value, fixture)
+        #expect(result.errors == [])
     }
 
     /// should handle null literal
@@ -237,11 +241,8 @@ class GraphitiJSONScalarTests: XCTestCase {
             context: NoContext()
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            .null
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == .null)
+        #expect(result.errors == [])
     }
 
     /// should handle list literal
@@ -255,11 +256,8 @@ class GraphitiJSONScalarTests: XCTestCase {
             context: NoContext()
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            []
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == [])
+        #expect(result.errors == [])
     }
 
     /// should handle list literal
@@ -273,12 +271,8 @@ class GraphitiJSONScalarTests: XCTestCase {
             context: NoContext()
         )
 
-        XCTAssertEqual(result.data, nil)
-
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data == nil)
+        #expect(result.errors.count == 1)
     }
 }
 
@@ -301,34 +295,34 @@ let fixture = Map.dictionary([
 ])
 
 // Checks for equality while ignoring order. We compare Maps this way because pure JSON doesn't care about order
-func XCTAssertEqualIgnoringOrder(_ lhs: Map, _ rhs: Map, file _: StaticString = #filePath, line _: UInt = #line) throws {
+func ExpectEqualIgnoringOrder(_ lhs: Map, _ rhs: Map) throws {
     switch (lhs, rhs) {
     case (.undefined, .undefined):
         return
     case (.null, .null):
         return
     case let (.bool(l), .bool(r)):
-        XCTAssertEqual(l, r)
+        #expect(l == r)
     case let (.number(l), .number(r)):
-        XCTAssertEqual(l, r)
+        #expect(l == r)
     case let (.string(l), .string(r)):
-        XCTAssertEqual(l, r)
+        #expect(l == r)
     case let (.array(l), .array(r)):
-        XCTAssertEqual(l, r)
+        #expect(l == r)
     case let (.dictionary(l), .dictionary(r)):
         var lUnordered = [String: Map]()
         l.forEach { lUnordered[$0.0] = $0.1 }
         var rUnordered = [String: Map]()
         r.forEach { rUnordered[$0.0] = $0.1 }
 
-        XCTAssertEqual(lUnordered.keys, rUnordered.keys)
+        #expect(lUnordered.keys == rUnordered.keys)
 
         for key in lUnordered.keys {
-            let lhsValue = try XCTUnwrap(lUnordered[key])
-            let rhsValue = try XCTUnwrap(rUnordered[key])
-            try XCTAssertEqualIgnoringOrder(lhsValue, rhsValue)
+            let lhsValue = try #require(lUnordered[key])
+            let rhsValue = try #require(rUnordered[key])
+            try ExpectEqualIgnoringOrder(lhsValue, rhsValue)
         }
     default:
-        XCTFail()
+        Issue.record("Unexpected Map type: \(lhs) vs \(rhs)")
     }
 }
