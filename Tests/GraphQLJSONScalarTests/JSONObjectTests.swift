@@ -13,13 +13,13 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should support serialization
-    func testSerialize() throws {
-        let result = try graphql(
+    func testSerialize() async throws {
+        let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
             rootValue: fixture,
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["rootValue"],
@@ -29,13 +29,13 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject string value
-    func testSerialize_String() throws {
-        let result = try graphql(
+    func testSerialize_String() async throws {
+        let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
             rootValue: "foo",
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["rootValue"], .null)
         XCTAssertEqual(
@@ -45,13 +45,13 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject array value
-    func testSerialize_Array() throws {
-        let result = try graphql(
+    func testSerialize_Array() async throws {
+        let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
             rootValue: [],
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["rootValue"], .null)
         XCTAssertEqual(
@@ -61,8 +61,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should support parsing values
-    func testParseValue() throws {
-        let result = try graphql(
+    func testParseValue() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query($arg: JSONObject!) {
@@ -71,7 +71,7 @@ final class JSONObjectTests: XCTestCase {
             """,
             eventLoopGroup: group,
             variableValues: ["arg": fixture]
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -81,8 +81,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject string value
-    func testParseValue_String() throws {
-        let result = try graphql(
+    func testParseValue_String() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query($arg: JSON!) {
@@ -91,7 +91,7 @@ final class JSONObjectTests: XCTestCase {
             """,
             eventLoopGroup: group,
             variableValues: ["arg": "foo"]
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["value"], nil)
         XCTAssertEqual(
@@ -101,8 +101,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject array value
-    func testParseValue_Array() throws {
-        let result = try graphql(
+    func testParseValue_Array() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query($arg: JSON!) {
@@ -111,7 +111,7 @@ final class JSONObjectTests: XCTestCase {
             """,
             eventLoopGroup: group,
             variableValues: ["arg": []]
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["value"], nil)
         XCTAssertEqual(
@@ -121,8 +121,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should support parsing literals
-    func testParseLiteral() throws {
-        let result = try graphql(
+    func testParseLiteral() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
@@ -148,7 +148,7 @@ final class JSONObjectTests: XCTestCase {
             }
             """,
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -158,8 +158,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject string value
-    func testParseLiteral_String() throws {
-        let result = try graphql(
+    func testParseLiteral_String() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
@@ -167,7 +167,7 @@ final class JSONObjectTests: XCTestCase {
             }
             """,
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["value"], nil)
         XCTAssertEqual(
@@ -177,8 +177,8 @@ final class JSONObjectTests: XCTestCase {
     }
 
     /// should reject array literal
-    func testParseLiteral_Array() throws {
-        let result = try graphql(
+    func testParseLiteral_Array() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
@@ -186,7 +186,7 @@ final class JSONObjectTests: XCTestCase {
             }
             """,
             eventLoopGroup: group
-        ).wait()
+        )
 
         XCTAssertEqual(result.data?["value"], nil)
         XCTAssertEqual(

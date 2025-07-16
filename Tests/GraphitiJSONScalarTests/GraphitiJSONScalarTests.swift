@@ -90,57 +90,62 @@ class GraphitiJSONScalarTests: XCTestCase {
         try? self.group.syncShutdownGracefully()
     }
 
-    func testNullLiteral() throws {
+    func testNullLiteral() async throws {
+        let result = try await api.execute(
+            request: "{ nullLiteral }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ nullLiteral }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: ["nullLiteral": .null])
         )
     }
 
-    func testBoolLiteral() throws {
+    func testBoolLiteral() async throws {
+        let result = try await api.execute(
+            request: "{ boolLiteral }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ boolLiteral }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: ["boolLiteral": true])
         )
     }
 
-    func testNumberLiteral() throws {
+    func testNumberLiteral() async throws {
+        let result = try await api.execute(
+            request: "{ numberLiteral }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ numberLiteral }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: ["numberLiteral": 42])
         )
     }
 
-    func testStringLiteral() throws {
+    func testStringLiteral() async throws {
+        let result = try await api.execute(
+            request: "{ stringLiteral }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ stringLiteral }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: ["stringLiteral": "Fourty-two"])
         )
     }
 
-    func testArray() throws {
+    func testArray() async throws {
+        let result = try await api.execute(
+            request: "{ array }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ array }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: ["array": [
                 ["number": 42, "null": .null],
                 ["string": "Fourty-two", "null": .null],
@@ -148,13 +153,14 @@ class GraphitiJSONScalarTests: XCTestCase {
         )
     }
 
-    func testDictionary() throws {
+    func testDictionary() async throws {
+        let result = try await api.execute(
+            request: "{ dictionary }",
+            context: api.context,
+            on: group
+        )
         XCTAssertEqual(
-            try api.execute(
-                request: "{ dictionary }",
-                context: api.context,
-                on: group
-            ).wait(),
+            result,
             .init(data: [
                 "dictionary": [
                     "null": .null,
@@ -181,8 +187,8 @@ class GraphitiJSONScalarTests: XCTestCase {
     }
 
     /// should support parsing values
-    func testParseValue() throws {
-        let result = try api.execute(
+    func testParseValue() async throws {
+        let result = try await api.execute(
             request: """
             query($arg: JSON!) {
                 value(arg: $arg)
@@ -191,7 +197,7 @@ class GraphitiJSONScalarTests: XCTestCase {
             context: api.context,
             on: group,
             variables: ["arg": fixture]
-        ).wait()
+        )
 
         let value = try XCTUnwrap(result.data?["value"])
         try XCTAssertEqualIgnoringOrder(value, fixture)
@@ -199,8 +205,8 @@ class GraphitiJSONScalarTests: XCTestCase {
     }
 
     /// should support parsing literals
-    func testParseLiteral() throws {
-        let result = try api.execute(
+    func testParseLiteral() async throws {
+        let result = try await api.execute(
             request: """
             query {
                 value(
@@ -226,7 +232,7 @@ class GraphitiJSONScalarTests: XCTestCase {
             """,
             context: api.context,
             on: group
-        ).wait()
+        )
 
         let value = try XCTUnwrap(result.data?["value"])
         try XCTAssertEqualIgnoringOrder(value, fixture)
@@ -234,8 +240,8 @@ class GraphitiJSONScalarTests: XCTestCase {
     }
 
     /// should handle null literal
-    func testParseLiteral_Null() throws {
-        let result = try api.execute(
+    func testParseLiteral_Null() async throws {
+        let result = try await api.execute(
             request: """
             query {
                 value(arg: null)
@@ -243,7 +249,7 @@ class GraphitiJSONScalarTests: XCTestCase {
             """,
             context: api.context,
             on: group
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -253,8 +259,8 @@ class GraphitiJSONScalarTests: XCTestCase {
     }
 
     /// should handle list literal
-    func testParseLiteral_List() throws {
-        let result = try api.execute(
+    func testParseLiteral_List() async throws {
+        let result = try await api.execute(
             request: """
             query {
                 value(arg: [])
@@ -262,7 +268,7 @@ class GraphitiJSONScalarTests: XCTestCase {
             """,
             context: api.context,
             on: group
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -272,8 +278,8 @@ class GraphitiJSONScalarTests: XCTestCase {
     }
 
     /// should handle list literal
-    func testParseLiteral_Invalid() throws {
-        let result = try api.execute(
+    func testParseLiteral_Invalid() async throws {
+        let result = try await api.execute(
             request: """
             query {
                 value(arg: INVALID)
@@ -281,7 +287,7 @@ class GraphitiJSONScalarTests: XCTestCase {
             """,
             context: api.context,
             on: group
-        ).wait()
+        )
 
         XCTAssertEqual(result.data, nil)
 
