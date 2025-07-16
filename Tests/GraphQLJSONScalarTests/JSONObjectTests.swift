@@ -2,13 +2,13 @@ import GraphQL
 import GraphQLJSONScalar
 import NIO
 import OrderedCollections
-import XCTest
+import Testing
 
-final class JSONObjectTests: XCTestCase {
+@Suite class JSONObjectTests {
     var schema: GraphQLSchema!
     let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
-    override func setUp() async throws {
+    init() async throws {
         schema = try createSchema(type: GraphQLJSONObjectScalar)
     }
 
@@ -21,11 +21,8 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(
-            result.data?["rootValue"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["rootValue"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should reject string value
@@ -37,11 +34,8 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(result.data?["rootValue"], .null)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["rootValue"] == .null)
+        #expect(result.errors.count == 1)
     }
 
     /// should reject array value
@@ -53,11 +47,8 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(result.data?["rootValue"], .null)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["rootValue"] == .null)
+        #expect(result.errors.count == 1)
     }
 
     /// should support parsing values
@@ -73,11 +64,8 @@ final class JSONObjectTests: XCTestCase {
             variableValues: ["arg": fixture]
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should reject string value
@@ -93,11 +81,8 @@ final class JSONObjectTests: XCTestCase {
             variableValues: ["arg": "foo"]
         )
 
-        XCTAssertEqual(result.data?["value"], nil)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["value"] == nil)
+        #expect(result.errors.count == 1)
     }
 
     /// should reject array value
@@ -113,11 +98,8 @@ final class JSONObjectTests: XCTestCase {
             variableValues: ["arg": []]
         )
 
-        XCTAssertEqual(result.data?["value"], nil)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["value"] == nil)
+        #expect(result.errors.count == 1)
     }
 
     /// should support parsing literals
@@ -150,11 +132,8 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(
-            result.data?["value"],
-            fixture
-        )
-        XCTAssertEqual(result.errors, [])
+        #expect(result.data?["value"] == fixture)
+        #expect(result.errors == [])
     }
 
     /// should reject string value
@@ -169,11 +148,8 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(result.data?["value"], nil)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["value"] == nil)
+        #expect(result.errors.count == 1)
     }
 
     /// should reject array literal
@@ -188,10 +164,7 @@ final class JSONObjectTests: XCTestCase {
             eventLoopGroup: group
         )
 
-        XCTAssertEqual(result.data?["value"], nil)
-        XCTAssertEqual(
-            result.errors.count,
-            1
-        )
+        #expect(result.data?["value"] == nil)
+        #expect(result.errors.count == 1)
     }
 }
