@@ -2,35 +2,34 @@ import Foundation
 import Graphiti
 import GraphitiJSONScalar
 import GraphQL
-import NIO
 import OrderedCollections
 import XCTest
 
-struct TestResolver {
-    func nullLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+struct TestResolver: Sendable {
+    @Sendable func nullLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
         return .null
     }
 
-    func boolLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    @Sendable func boolLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
         return true
     }
 
-    func numberLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    @Sendable func numberLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
         return 42
     }
 
-    func stringLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    @Sendable func stringLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
         return "Fourty-two"
     }
 
-    func array(context _: NoContext, arguments _: NoArguments) -> Map {
+    @Sendable func array(context _: NoContext, arguments _: NoArguments) -> Map {
         return .array([
             .dictionary(["number": 42, "null": .null]),
             .dictionary(["string": "Fourty-two", "null": .null]),
         ])
     }
 
-    func dictionary(context _: NoContext, arguments _: NoArguments) -> Map {
+    @Sendable func dictionary(context _: NoContext, arguments _: NoArguments) -> Map {
         return .dictionary([
             "null": .null,
             "bool": true,
@@ -53,18 +52,19 @@ struct TestResolver {
         ])
     }
 
-    func value(context _: NoContext, arguments: ValueArguments) throws -> Map {
+    @Sendable func value(context _: NoContext, arguments: ValueArguments) throws -> Map {
         return arguments.arg ?? .null
     }
 }
 
-struct ValueArguments: Codable {
+struct TestContext: Sendable {}
+
+struct ValueArguments: Codable, Sendable {
     let arg: Map?
 }
 
 struct TestAPI: API {
     let resolver = TestResolver()
-    let context: () = NoContext()
 
     let schema = try! Schema<TestResolver, NoContext> {
         Scalar.json()
@@ -84,17 +84,11 @@ struct TestAPI: API {
 
 class GraphitiJSONScalarTests: XCTestCase {
     private let api = TestAPI()
-    private var group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
-
-    deinit {
-        try? self.group.syncShutdownGracefully()
-    }
 
     func testNullLiteral() async throws {
         let result = try await api.execute(
             request: "{ nullLiteral }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -105,8 +99,7 @@ class GraphitiJSONScalarTests: XCTestCase {
     func testBoolLiteral() async throws {
         let result = try await api.execute(
             request: "{ boolLiteral }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -117,8 +110,7 @@ class GraphitiJSONScalarTests: XCTestCase {
     func testNumberLiteral() async throws {
         let result = try await api.execute(
             request: "{ numberLiteral }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -129,8 +121,7 @@ class GraphitiJSONScalarTests: XCTestCase {
     func testStringLiteral() async throws {
         let result = try await api.execute(
             request: "{ stringLiteral }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -141,8 +132,7 @@ class GraphitiJSONScalarTests: XCTestCase {
     func testArray() async throws {
         let result = try await api.execute(
             request: "{ array }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -156,8 +146,7 @@ class GraphitiJSONScalarTests: XCTestCase {
     func testDictionary() async throws {
         let result = try await api.execute(
             request: "{ dictionary }",
-            context: api.context,
-            on: group
+            context: NoContext()
         )
         XCTAssertEqual(
             result,
@@ -194,8 +183,7 @@ class GraphitiJSONScalarTests: XCTestCase {
                 value(arg: $arg)
             }
             """,
-            context: api.context,
-            on: group,
+            context: NoContext(),
             variables: ["arg": fixture]
         )
 
@@ -230,8 +218,7 @@ class GraphitiJSONScalarTests: XCTestCase {
                 )
             }
             """,
-            context: api.context,
-            on: group
+            context: NoContext()
         )
 
         let value = try XCTUnwrap(result.data?["value"])
@@ -247,8 +234,7 @@ class GraphitiJSONScalarTests: XCTestCase {
                 value(arg: null)
             }
             """,
-            context: api.context,
-            on: group
+            context: NoContext()
         )
 
         XCTAssertEqual(
@@ -266,8 +252,7 @@ class GraphitiJSONScalarTests: XCTestCase {
                 value(arg: [])
             }
             """,
-            context: api.context,
-            on: group
+            context: NoContext()
         )
 
         XCTAssertEqual(
@@ -285,8 +270,7 @@ class GraphitiJSONScalarTests: XCTestCase {
                 value(arg: INVALID)
             }
             """,
-            context: api.context,
-            on: group
+            context: NoContext()
         )
 
         XCTAssertEqual(result.data, nil)

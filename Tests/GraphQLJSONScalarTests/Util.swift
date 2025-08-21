@@ -1,6 +1,5 @@
 import GraphQL
 import GraphQLJSONScalar
-import NIO
 import OrderedCollections
 import XCTest
 

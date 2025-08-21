@@ -1,29 +1,22 @@
 import GraphQL
 import GraphQLJSONScalar
-import NIO
 import OrderedCollections
 import XCTest
 
 final class JSONTests: XCTestCase {
     var schema: GraphQLSchema!
-    let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
-
-    deinit {
-        try? self.group.syncShutdownGracefully()
-    }
 
     override func setUp() async throws {
         schema = try createSchema(type: GraphQLJSONScalar)
     }
 
     /// should support serialization
-    func testSerialize() throws {
-        let result = try graphql(
+    func testSerialize() async throws {
+        let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
-            rootValue: fixture,
-            eventLoopGroup: group
-        ).wait()
+            rootValue: fixture
+        )
 
         XCTAssertEqual(
             result.data?["rootValue"],
@@ -33,17 +26,16 @@ final class JSONTests: XCTestCase {
     }
 
     /// should support parsing values
-    func testParseValue() throws {
-        let result = try graphql(
+    func testParseValue() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query($arg: JSON!) {
                 value(arg: $arg)
             }
             """,
-            eventLoopGroup: group,
             variableValues: ["arg": fixture]
-        ).wait()
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -53,8 +45,8 @@ final class JSONTests: XCTestCase {
     }
 
     /// should support parsing literals
-    func testParseLiteral() throws {
-        let result = try graphql(
+    func testParseLiteral() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
@@ -78,9 +70,8 @@ final class JSONTests: XCTestCase {
                     }
                 )
             }
-            """,
-            eventLoopGroup: group
-        ).wait()
+            """
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -90,16 +81,15 @@ final class JSONTests: XCTestCase {
     }
 
     /// should handle null literal
-    func testParseLiteral_Null() throws {
-        let result = try graphql(
+    func testParseLiteral_Null() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
                 value(arg: null)
             }
-            """,
-            eventLoopGroup: group
-        ).wait()
+            """
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -109,16 +99,15 @@ final class JSONTests: XCTestCase {
     }
 
     /// should handle list literal
-    func testParseLiteral_List() throws {
-        let result = try graphql(
+    func testParseLiteral_List() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
                 value(arg: [])
             }
-            """,
-            eventLoopGroup: group
-        ).wait()
+            """
+        )
 
         XCTAssertEqual(
             result.data?["value"],
@@ -128,16 +117,15 @@ final class JSONTests: XCTestCase {
     }
 
     /// should reject invalid literal
-    func testParseLiteral_Invalid() throws {
-        let result = try graphql(
+    func testParseLiteral_Invalid() async throws {
+        let result = try await graphql(
             schema: schema,
             request: """
             query {
                 value(arg: INVALID)
             }
-            """,
-            eventLoopGroup: group
-        ).wait()
+            """
+        )
 
         XCTAssertEqual(result.data, nil)
 

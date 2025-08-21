@@ -1,12 +1,10 @@
 import GraphQL
 import GraphQLJSONScalar
-import NIO
 import OrderedCollections
 import XCTest
 
 final class JSONObjectTests: XCTestCase {
     var schema: GraphQLSchema!
-    let group = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
 
     override func setUp() async throws {
         schema = try createSchema(type: GraphQLJSONObjectScalar)
@@ -17,8 +15,7 @@ final class JSONObjectTests: XCTestCase {
         let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
-            rootValue: fixture,
-            eventLoopGroup: group
+            rootValue: fixture
         )
 
         XCTAssertEqual(
@@ -33,8 +30,7 @@ final class JSONObjectTests: XCTestCase {
         let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
-            rootValue: "foo",
-            eventLoopGroup: group
+            rootValue: "foo"
         )
 
         XCTAssertEqual(result.data?["rootValue"], .null)
@@ -49,8 +45,7 @@ final class JSONObjectTests: XCTestCase {
         let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
-            rootValue: [],
-            eventLoopGroup: group
+            rootValue: []
         )
 
         XCTAssertEqual(result.data?["rootValue"], .null)
@@ -69,7 +64,6 @@ final class JSONObjectTests: XCTestCase {
                 value(arg: $arg)
             }
             """,
-            eventLoopGroup: group,
             variableValues: ["arg": fixture]
         )
 
@@ -89,7 +83,6 @@ final class JSONObjectTests: XCTestCase {
                 value(arg: $arg)
             }
             """,
-            eventLoopGroup: group,
             variableValues: ["arg": "foo"]
         )
 
@@ -109,7 +102,6 @@ final class JSONObjectTests: XCTestCase {
                 value(arg: $arg)
             }
             """,
-            eventLoopGroup: group,
             variableValues: ["arg": []]
         )
 
@@ -146,8 +138,7 @@ final class JSONObjectTests: XCTestCase {
                     }
                 )
             }
-            """,
-            eventLoopGroup: group
+            """
         )
 
         XCTAssertEqual(
@@ -165,8 +156,7 @@ final class JSONObjectTests: XCTestCase {
             query {
                 value(arg: "foo")
             }
-            """,
-            eventLoopGroup: group
+            """
         )
 
         XCTAssertEqual(result.data?["value"], nil)
@@ -184,8 +174,7 @@ final class JSONObjectTests: XCTestCase {
             query {
                 value(arg: [])
             }
-            """,
-            eventLoopGroup: group
+            """
         )
 
         XCTAssertEqual(result.data?["value"], nil)

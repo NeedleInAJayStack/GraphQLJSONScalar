@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GraphQLSwift/Graphiti.git",
       "state" : {
-        "revision" : "ed06f0608a72176fd572763660e7492bfb53a419",
-        "version" : "1.15.1"
+        "revision" : "a23a3d232df202fc158ad2d698926325b470523c",
+        "version" : "3.0.0"
       }
     },
     {
@@ -14,17 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GraphQLSwift/GraphQL.git",
       "state" : {
-        "revision" : "ec809df8cce95d6aea820f70f04067abc08080f2",
-        "version" : "2.10.3"
-      }
-    },
-    {
-      "identity" : "swift-atomics",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-atomics.git",
-      "state" : {
-        "revision" : "cd142fd2f64be2100422d658e7411e39489da985",
-        "version" : "1.2.0"
+        "revision" : "eedec2bbfcfd0c10c2eaee8ac2f91bde5af28b8c",
+        "version" : "4.0.0"
       }
     },
     {
@@ -32,26 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
-        "version" : "1.1.4"
-      }
-    },
-    {
-      "identity" : "swift-nio",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-nio.git",
-      "state" : {
-        "revision" : "914081701062b11e3bb9e21accc379822621995e",
-        "version" : "2.76.1"
-      }
-    },
-    {
-      "identity" : "swift-system",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-system.git",
-      "state" : {
-        "revision" : "c8a44d836fe7913603e246acab7c528c2e780168",
-        "version" : "1.4.0"
+        "revision" : "8c0c0a8b49e080e54e5e328cc552821ff07cd341",
+        "version" : "1.2.1"
       }
     }
   ],
