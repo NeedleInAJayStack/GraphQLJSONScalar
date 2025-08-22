@@ -30,5 +30,6 @@ let package = Package(
             name: "GraphitiJSONScalarTests",
             dependencies: ["GraphitiJSONScalar"]
         ),
-    ]
+    ],
+    swiftLanguageVersions: [.v5, .version("6")]
 )

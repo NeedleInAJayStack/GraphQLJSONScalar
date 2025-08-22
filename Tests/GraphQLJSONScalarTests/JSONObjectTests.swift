@@ -45,7 +45,7 @@ final class JSONObjectTests: XCTestCase {
         let result = try await graphql(
             schema: schema,
             request: "{ rootValue }",
-            rootValue: []
+            rootValue: [any Sendable]()
         )
 
         XCTAssertEqual(result.data?["rootValue"], .null)
