@@ -5,31 +5,31 @@ import GraphQL
 import OrderedCollections
 import XCTest
 
-struct TestResolver: Sendable {
-    @Sendable func nullLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+struct TestResolver {
+    func nullLiteral(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return .null
     }
 
-    @Sendable func boolLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    func boolLiteral(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return true
     }
 
-    @Sendable func numberLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    func numberLiteral(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return 42
     }
 
-    @Sendable func stringLiteral(context _: NoContext, arguments _: NoArguments) -> Map {
+    func stringLiteral(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return "Fourty-two"
     }
 
-    @Sendable func array(context _: NoContext, arguments _: NoArguments) -> Map {
+    func array(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return .array([
             .dictionary(["number": 42, "null": .null]),
             .dictionary(["string": "Fourty-two", "null": .null]),
         ])
     }
 
-    @Sendable func dictionary(context _: NoContext, arguments _: NoArguments) -> Map {
+    func dictionary(context _: NoContext, arguments _: NoArguments) throws -> Map {
         return .dictionary([
             "null": .null,
             "bool": true,
@@ -52,14 +52,14 @@ struct TestResolver: Sendable {
         ])
     }
 
-    @Sendable func value(context _: NoContext, arguments: ValueArguments) throws -> Map {
+    func value(context _: NoContext, arguments: ValueArguments) throws -> Map {
         return arguments.arg ?? .null
     }
 }
 
-struct TestContext: Sendable {}
+struct TestContext {}
 
-struct ValueArguments: Codable, Sendable {
+struct ValueArguments: Codable {
     let arg: Map?
 }
 
